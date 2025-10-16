@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do you like me?</title>
+<style>
+  body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-align: center;
+    background: linear-gradient(to bottom right, #ffb6c1, #ffe4ec);
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
+  #questionContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  h1 {
+    margin-top: 100px;
+    color: #ff3366;
+    text-shadow: 1px 1px 2px #fff;
+  }
+  button {
+    padding: 12px 28px;
+    font-size: 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, background-color 0.3s ease;
+  }
+  button:hover {
+    transform: scale(1.1);
+  }
+  #yesBtn {
+    background-color: #ff4d79;
+    color: white;
+  }
+  #noBtn {
+    background-color: #ccc;
+    color: #333;
+    position: absolute;
+  }
+  #heartLoader {
+    display: none;
+    font-size: 30px;
+    margin-top: 100px;
+  }
+  #resultContainer {
+    display: none;
+    margin-top: 100px;
+    animation: fadeIn 1.5s ease forwards;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  /* Floating hearts */
+  .heart {
+    position: absolute;
+    color: #ff4d79;
+    font-size: 24px;
+    animation: floatUp 4s linear infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-800px) scale(1.5); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+  <audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/06/audio_7c5a7e9ff9.mp3?filename=romantic-piano-141287.mp3" type="audio/mp3">
+  </audio>
+
+  <div id="questionContainer">
+    <h1>Do you like me? ❤️</h1>
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+
+    <div id="heartLoader">💖 Loading love...</div>
+    <div id="resultContainer">
+      <h2>Yay! I like you too 😍</h2>
+      <img id="gifResult" src="https://media.tenor.com/x8v1oNUOmg4AAAAd/love.gif" width="200">
+    </div>
+  </div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const questionContainer = document.getElementById("questionContainer");
+const heartLoader = document.getElementById("heartLoader");
+const resultContainer = document.getElementById("resultContainer");
+const bgMusic = document.getElementById("bgMusic");
+
+let moveSpeed = 0.3;
+
+noBtn.style.position = "absolute";
+noBtn.style.transition = `all ${moveSpeed}s ease`;
+
+function moveNoButton() {
+  const containerWidth = questionContainer.offsetWidth - noBtn.offsetWidth;
+  const containerHeight = questionContainer.offsetHeight - noBtn.offsetHeight;
+  const newX = Math.floor(Math.random() * containerWidth);
+  const newY = Math.floor(Math.random() * containerHeight);
+  noBtn.style.left = `${newX}px`;
+  noBtn.style.top = `${newY}px`;
+  moveSpeed = Math.max(0.1, moveSpeed - 0.02); // faster each time
+  noBtn.style.transition = `all ${moveSpeed}s ease`;
+}
+
+noBtn.addEventListener("mouseover", moveNoButton);
+noBtn.addEventListener("touchstart", moveNoButton);
+
+yesBtn.addEventListener("click", () => {
+  bgMusic.play();
+  heartLoader.style.display = "block";
+  resultContainer.style.display = "none";
+
+  // make hearts float while loading
+  const heartInterval = setInterval(createHeart, 300);
+
+  setTimeout(() => {
+    clearInterval(heartInterval);
+    heartLoader.style.display = "none";
+    resultContainer.style.display = "block";
+  }, 2500);
+});
+
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerText = "💖";
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  heart.style.bottom = "0px";
+  heart.style.fontSize = Math.random() * 20 + 20 + "px";
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 4000);
+}
+</script>
+</body>
+</html>
